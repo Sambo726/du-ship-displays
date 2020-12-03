@@ -1,12 +1,11 @@
 #!/usr/bin/env lua
+--- Tests for antigravity screen.start1 - functionality tests, not display
 
---- Tests for antigravity screen.start1.
-package.path = package.path .. ";./resources/du-utils/?.lua" -- add du-utils project
 package.path = package.path .. ";../du-mocks/?.lua" -- add du-mocks project
 
 local lu = require("luaunit")
 
-require("duutils.Utilities")
+require("common.Utilities")
 require("common.ScreenUtils")
 
 local SVG_OUTPUT_FILE = "tests/results/images/antigravity-basic.svg"
@@ -157,6 +156,13 @@ function _G.TestAntigravityScreen:testSetAltitudeAdjust()
     modified = _G.agScreenController:setAltitudeAdjust(expected)
     lu.assertTrue(modified)
     lu.assertNotEquals(_G.agScreenController.altitudeAdjustment, expected)
+
+    -- raised maximum
+    expected = 1000000
+    _G.agScreenController.MAX_ADJUSTMENT_VALUE = expected
+    modified = _G.agScreenController:setAltitudeAdjust(expected)
+    lu.assertTrue(modified)
+    lu.assertEquals(_G.agScreenController.altitudeAdjustment, expected)
 end
 
 --- Verify mouseDown updates state properly.
